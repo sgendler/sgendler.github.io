@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<style>
+			body {
+				background-color: #ffffff;
+				margin: 0;
+				overflow: hidden;
+			}
+		</style>
+	</head>
+	<body>
+		
+		<script src="http://threejsplaygnd.brangerbriz.net/js/three.min.js"></script>
+		<script src="http://threejsplaygnd.brangerbriz.net/js/Detector.js"></script>
+		<script>
+
+			if ( ! Detector.webgl ) Detector.addGetWebGLMessage();
+			
+			var camera, scene, renderer;
+			var geometry, material, mesh;
+
+			function setup() {
+
+				var W = window.innerWidth, H = window.innerHeight;
+				renderer = new THREE.WebGLRenderer();
+				renderer.setSize( W, H );
+				document.body.appendChild( renderer.domElement );
+
+				camera = new THREE.PerspectiveCamera( 50, W/H, 1, 10000 );
+				camera.position.z = 500;
+
+				scene = new THREE.Scene();
+				
+				
+				map = THREE.ImageUtils.loadTexture('https://i.imgur.com/m75J84b.jpg');
+geometry = new THREE.TorusKnotGeometry(100, 40, 64, 8, 2, 3, 1);
+material = new THREE.MeshLambertMaterial({shading: THREE.FlatShading, color: 0xdcdcdc, map: map, transparent: true, opacity: 1});
+mesh = new THREE.Mesh(geometry, material);
+map.wrapS = map.wrapT = THREE.RepeatWrapping;
+map.repeat.set( 1, 1 );
+mesh.scale.x = mesh.scale.y = mesh.scale.z = 1.;
+mesh.position.y = 40.59;
+mesh.rotation.x = 3.7;
+mesh.rotation.y = 3.09;
+scene.add(mesh);
+
+ambientLight = new THREE.AmbientLight( 0x000000 );
+scene.add( ambientLight );
+
+hemisphereLight = new THREE.HemisphereLight(0xffffff, 0xff0000, 2.48);
+scene.add( hemisphereLight );
+
+directionalLight = new THREE.DirectionalLight(0xffffff, 0);
+directionalLight.position.set( -1.45, 1, 0 );
+directionalLight.castShadow = true;
+scene.add( directionalLight );
+
+spotLight1 = new THREE.SpotLight( 0xffffff, 0 );
+spotLight1.position.set( 100, 1000, 100 );
+spotLight1.castShadow = true;
+spotLight1.shadowDarkness = -0.46;
+scene.add( spotLight1 );
+
+spotLight2 = new THREE.SpotLight( 0xffffff, 0 );
+spotLight2.position.set( 100, 1000, 100 );
+spotLight2.castShadow = true;
+spotLight2.shadowDarkness = 0.58;
+scene.add( spotLight2 );
+
+				
+
+
+			}
+
+			function draw() {
+
+				requestAnimationFrame( draw );
+				
+				 mesh.position.x = Math.sin( Date.now() * 0.001 ) * 50;  
+	mesh.rotation.z = Date.now() * 0.0005;
+				renderer.render( scene, camera );
+
+			}
+
+			setup();
+			draw();
+
+		</script>
+		
+	</body>
+</html>
